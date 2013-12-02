@@ -409,6 +409,37 @@
 			this.updateNavArrows();
 		},
 
+		setFormat: function(format){
+			this._process_options({format: format});
+			this.update();
+			this.setValue();
+			this.updateNavArrows();
+		},
+
+		setMinViewMode: function(minViewMode){
+			this._process_options({minViewMode: minViewMode});
+			this.update();
+			this.updateNavArrows();
+		},
+
+		setViewMode: function(viewMode){
+			switch (viewMode) {
+				case 1:
+				case 'months':
+					viewMode = 1;
+					break;
+				case 2:
+				case 'years':
+					viewMode = 2;
+					break;
+				default:
+					viewMode = 0;
+			}
+
+			this.viewMode = viewMode;
+			this.showMode();
+		},
+
 		place: function(){
 						if(this.isInline) return;
 			var calendarWidth = this.picker.outerWidth(),
