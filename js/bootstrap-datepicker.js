@@ -410,8 +410,11 @@
 		},
 
 		setFormat: function(format){
+			var oldFormat = this.o.format;
+			var date = ( this.isInput ? this.element.val() : this.element.find('input').val() ).toString();
+
 			this._process_options({format: format});
-			this.update();
+			this.updateDate(date, oldFormat, this.o.language, false);
 			this.setValue();
 			this.updateNavArrows();
 		},
@@ -508,20 +511,23 @@
 		update: function(){
 			if (!this._allow_update) return;
 
-			var oldDate = this.date && new Date(this.date),
-				date, fromArgs = false;
+			var date, fromArgs = false;
 			if(arguments.length) {
 				date = arguments[0];
 				if (date instanceof Date)
 					date = this._local_to_utc(date);
 				fromArgs = true;
 			} else {
-				date = this.isInput ? this.element.val() : this.element.data('date') || this.element.find('input').val();
-				date = date.toString();
+				date = ( this.isInput ? this.element.val() : this.element.data('date') || this.element.find('input').val() ).toString();
 				delete this.element.data().date;
 			}
 
-			this.date = DPGlobal.parseDate(date, this.o.format, this.o.language);
+			this.updateDate( date, this.o.format, this.o.language, fromArgs);
+		},
+
+		updateDate: function( date, format, language, fromArgs ){
+			var oldDate = this.date && new Date(this.date);
+			this.date = DPGlobal.parseDate( date, format, language );
 
 			if (this.date < this.o.startDate) {
 				this.viewDate = new Date(this.o.startDate);
